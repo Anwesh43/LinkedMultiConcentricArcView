@@ -27,7 +27,7 @@ fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
 
 fun Canvas.drawConcentricArc(i : Int, scale : Float, size : Float, paint : Paint) {
     val sf : Float = scale.sinify().divideScale(i, arcs)
-    val gap : Float = size / arcs
+    val gap : Float = (size / arcs) * (i + 1)
     val deg : Float = 360f / arcs
     save()
     rotate(deg * i)
@@ -48,6 +48,7 @@ fun Canvas.drawMCANode(i : Int, scale : Float, paint : Paint) {
     paint.color = Color.parseColor(nodeColors[i])
     paint.strokeCap = Paint.Cap.ROUND
     paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.style = Paint.Style.STROKE
     save()
     translate(w / 2, h  / 2)
     drawMultiConcentricArcs(scale, size, paint)
