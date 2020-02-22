@@ -24,3 +24,29 @@ fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
+
+fun Canvas.drawConcentricArc(i : Int, scale : Float, size : Float, paint : Paint) {
+    val sf : Float = scale.sinify().divideScale(i, arcs)
+    val gap : Float = size / arcs
+    val deg : Float = 360f / arcs
+    save()
+    rotate(deg * i)
+    drawArc(RectF(-gap / 2, -gap / 2, gap / 2, gap / 2), 0f, deg * sf, false, paint)
+    restore()
+}
+
+fun Canvas.drawMultiConcentricArcs(scale : Float, size : Float, paint : Paint) {
+    for (j in 0..(arcs - 1)) {
+        drawConcentricArc(j, scale, size, paint)
+    }
+}
+
+fun Canvas.drawMCANode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val size : Float = Math.min(w, h)
+    save()
+    translate(w / 2, h  / 2)
+    drawMultiConcentricArcs(scale, size, paint)
+    restore()
+}
