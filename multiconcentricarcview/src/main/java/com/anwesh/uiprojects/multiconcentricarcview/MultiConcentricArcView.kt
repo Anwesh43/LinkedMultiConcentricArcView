@@ -45,6 +45,9 @@ fun Canvas.drawMCANode(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
     val size : Float = Math.min(w, h)
+    paint.color = Color.parseColor(nodeColors[i])
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
     save()
     translate(w / 2, h  / 2)
     drawMultiConcentricArcs(scale, size, paint)
@@ -53,14 +56,16 @@ fun Canvas.drawMCANode(i : Int, scale : Float, paint : Paint) {
 
 class MultiConcentricArcView(ctx : Context) : View(ctx) {
 
-    override fun onDraw(canvas : Canvas) {
+    private val renderer : Renderer = Renderer(this)
 
+    override fun onDraw(canvas : Canvas) {
+        renderer.render(canvas)
     }
 
     override fun onTouchEvent(event : MotionEvent) : Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -183,6 +188,7 @@ class MultiConcentricArcView(ctx : Context) : View(ctx) {
         private val animator : Animator = Animator(view)
         private val mca : MultiConcentricArc = MultiConcentricArc(0)
         private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
         fun render(canvas : Canvas) {
             canvas.drawColor(backColor)
             mca.draw(canvas, paint)
