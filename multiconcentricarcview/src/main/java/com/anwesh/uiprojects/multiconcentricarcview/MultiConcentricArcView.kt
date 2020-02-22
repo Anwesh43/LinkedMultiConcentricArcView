@@ -205,4 +205,13 @@ class MultiConcentricArcView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : MultiConcentricArcView {
+            val view : MultiConcentricArcView = MultiConcentricArcView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
